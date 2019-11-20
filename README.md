@@ -1,4 +1,4 @@
-# express-JWT-boilerplate
+# Express JWT API Boilerplate
 Express-based JWT API Boilerplate with User Login and Signup, Get User Info and Delete User
 
 ## About
