@@ -6,6 +6,17 @@ Whilst working on other projects, I usually found myself having to write user lo
 speed things up. I made this one with simplicity in mind as a lot of API Boilerplates for user management seemed too complex for my
 use cases.
 
+## Install 
+```
+git clone https://github.com/dmdxv/express-JWT-boilerplate.git
+```
+```
+npm install
+```
+```
+node app / nodemon app
+```
+You will need a mongoDB instance running for storing user credentials.
 ## Routes
 ### Base URL
 ```
