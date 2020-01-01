@@ -5,7 +5,7 @@ exports.success = function(res, msg) {
     status: 1,
     message: msg
   };
-  return res.status(200).json(data);
+  return res.status(201).json(data);
 };
 
 exports.successWithData = function(res, msg, data) {
@@ -14,7 +14,7 @@ exports.successWithData = function(res, msg, data) {
     message: msg,
     data: data
   };
-  return res.status(200).json(data);
+  return res.status(201).json(data);
 };
 
 exports.error = function(res, msg) {

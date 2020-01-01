@@ -1,41 +1,30 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const JWT_Token = require("../helpers/JWTCreate");
+const moment = require("moment");
 
 const apiRes = require("../helpers/apiResponse");
 
 exports.signup = (req, res) => {
-  console.log(req.body);
-  User.find({ username: req.body.username })
-    .exec()
-    .then(user => {
-      if (user.length >= 1) {
-        apiRes.error(res, "User already exists.");
-      } else {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-          if (err) {
-            apiRes.error(res, "An error occured.");
-          } else {
-            const user = new User({
-              _id: new mongoose.Types.ObjectId(),
-              username: req.body.username,
-              password: hash
-            });
-            user
-              .save()
-              .then(result => {
-                console.log(result);
-                apiRes.success(res, "User created");
-              })
-              .catch(err => {
-                console.log(err);
-                apiRes.error(res, "An error occured.");
-              });
-          }
-        });
+  var username = req.body.username;
+  var password = req.body.password;
+  User.findOne({ username: username }, function(err, user) {
+    if (err) {
+      return done(err);
+    }
+    if (user) {
+      return done(null, false, { message: "Email is already in use." });
+    }
+    var newUser = new User();
+    newUser.username = username;
+    newUser.password = newUser.encryptPassword(password);
+    newUser.created_at = moment().toDate();
+    newUser.save(function(err, result) {
+      if (err) {
+        return apiRes.error(res, "An error occured.");
       }
+      apiRes.success(res, "User created succesfully");
     });
+  });
 };
 
 exports.login = (req, res) => {
@@ -50,29 +39,18 @@ exports.login = (req, res) => {
           apiRes.validationError(res, "Incorrect Password");
         }
         if (result) {
-          const token = jwt.sign(
-            {
-              username: user[0].username,
-              userID: user[0]._id
-            },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "1h"
-            }
-          );
+          const token = JWT_Token.create();
           return apiRes.successWithData(res, "Successful Authorization", token);
         }
         apiRes.validationError(res, "Incorrect Password");
       });
     })
     .catch(err => {
-      console.log(err);
       apiRes.error(res, "An error occured.");
     });
 };
 
 exports.getUser = (req, res) => {
-  console.log(req.params);
   User.find({ username: req.params.username })
     .exec()
     .then(user => {
