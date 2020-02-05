@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router()
 const jwt = require("jsonwebtoken");
 const User = require("../models/user")
+const auth = require("../middleware/jwt")
 
 router.get("/", (req, res) => {
   res.status(201).json({
@@ -81,8 +82,8 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/user", verifyToken ,(req, res) => {
-  User.findOne({ _id: req.body.uid }, function (err, user) {
+router.get("/user/:uid", auth.checkToken ,(req, res) => {
+  User.findOne({ _id: req.params.uid }, function (err, user) {
     if (err) {
       console.log(err)
       return res.status(401).json({
@@ -105,18 +106,5 @@ router.post("/user", verifyToken ,(req, res) => {
     });
   });
 });
-
-function verifyToken(req, res, next) {
-  var token = req.body.token
-  jwt.verify(token, process.env.SECRET, (err, verifiedJwt) => {
-    if (err) {
-      res.status(500).json({
-        error: "Auth failed."
-      });
-    } else {
-      next()
-    }
-  })
-}
 
 module.exports = router
