@@ -6,7 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "chalk": "^3.0.0",
     "cookie-parser": "~1.4.4",
     "csrf": "^3.1.0",
