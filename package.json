@@ -15,7 +15,7 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "momentjs": "^2.0.0",
     "mongoose": "^5.7.11",
     "morgan": "~1.9.1"
